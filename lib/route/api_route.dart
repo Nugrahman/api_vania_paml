@@ -1,3 +1,4 @@
+import 'package:api_vania_paml/app/http/controllers/authcontroller.dart';
 import 'package:api_vania_paml/app/http/controllers/customer_controllers.dart';
 import 'package:api_vania_paml/app/http/controllers/order_controllers.dart';
 import 'package:api_vania_paml/app/http/controllers/product_controllers.dart';
@@ -32,39 +33,45 @@ class ApiRoute implements Route {
     }).middleware([AuthenticateMiddleware()]);
     
     Router.group(() {
+      Router.post('/register', authcontroller.register);
+      Router.post('/login', authcontroller.login);
+      Router.post('/logout', authcontroller.logout).middleware([AuthenticateMiddleware()]);
+    }, prefix: '/auth');
+
+    Router.group(() {
       Router.get('/', customerControllers.index);
       Router.post('/', customerControllers.store);
       Router.put('/{id}', customerControllers.update);
       Router.delete('/{id}', customerControllers.destroy);
-    }, prefix: '/customers');
+    }, prefix: '/customers', middleware: [AuthenticateMiddleware()]);
 
     Router.group(() {
       Router.get('/', vendorControllers.index);
       Router.post('/', vendorControllers.store);
       Router.put('/{id}', vendorControllers.update);
       Router.delete('/{id}', vendorControllers.destroy);
-    }, prefix: '/vendors');
+    }, prefix: '/vendors', middleware: [AuthenticateMiddleware()]);
 
     Router.group(() {
       Router.get('/', productControllers.index);
       Router.post('/', productControllers.store);
       Router.put('/{id}', productControllers.update);
       Router.delete('/{id}', productControllers.destroy);
-    }, prefix: '/products');
+    }, prefix: '/products', middleware: [AuthenticateMiddleware()]);
 
     Router.group(() {
       Router.get('/', productNoteControllers.index);
       Router.post('/', productNoteControllers.store);
       Router.put('/{id}', productNoteControllers.update);
       Router.delete('/{id}', productNoteControllers.destroy);
-    }, prefix: '/productNote');
+    }, prefix: '/productNote', middleware: [AuthenticateMiddleware()]);
 
     Router.group(() {
       Router.get('/', orderControllers.index);
       Router.post('/', orderControllers.store);
       Router.put('/{id}', orderControllers.update);
       Router.delete('/{id}', orderControllers.destroy);
-    }, prefix: '/orders');
+    }, prefix: '/orders', middleware: [AuthenticateMiddleware()]);
   }
 
 }
